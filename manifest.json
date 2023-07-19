@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "Repo Shortcuts",
+  "description": "Shortcuts to repo pages",
+  "version": "1.0",
+  "action": {
+    "default_popup": "hello.html",
+    "default_icon": "hello_extensions.png"
+  },
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "windows": "Ctrl+B",
+        "mac": "Command+B",
+        "chromeos": "Ctrl+B",
+        "linux": "Ctrl+B"
+      }
+    }
+  }
+}

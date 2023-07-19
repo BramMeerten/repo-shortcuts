@@ -1,0 +1,39 @@
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+#search-container {
+    width: 300px;
+    margin: 3px;
+    padding: 2px;
+    display: flex;
+    border: 1px solid #626eff;
+}
+
+#search-container input {
+    flex-grow: 1;
+    border: none;
+    outline: none;
+}
+
+#repos-container {
+    padding: 3px;
+}
+
+.repo-row {
+    padding: 5px 0;
+}
+
+.dir-badge, .mode-badge {
+    background-color: #bcdaff;
+    color: black;
+    padding: 3px;
+    margin-right: 2px;
+    text-align: center;
+    border-radius: 5px;
+}
+
+.highlighted {
+    background-color: #f1f1f1;
+}
