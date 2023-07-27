@@ -207,7 +207,9 @@ const REPO_SOURCE = {
                 { name: "publiq-uit-locaties-dc9141d2dfa5df96"},
                 { name: "publiq-uit-locaties-dc9141d2dfa5df96-shadow"},
                 { name: "theatervoorstellingen-807e9e6d9f8494d2"},
-                { name: "theatervoorstellingen-807e9e6d9f8494d2-shadow"}
+                { name: "theatervoorstellingen-807e9e6d9f8494d2-shadow"},
+                { name: "deploy-test-7a217989ff898adb"},
+                { name: "deploy-test-7a217989ff898adb-shadow"},
             ],
             subDirs: []
         }
