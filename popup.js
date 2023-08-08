@@ -142,11 +142,14 @@ function updateDisplayedRepos(search) {
 
 function initKeysListener() {
     let cmdPressed = false;
+    let shiftPressed = false;
     document.addEventListener('keydown', (event) => {
         if (event.code === 'MetaLeft') cmdPressed = true;
+        if (event.code === 'ShiftRight' || event.code === 'ShiftLeft') shiftPressed = true;
     });
     document.addEventListener('keyup', (event) => {
         if (event.code === 'MetaLeft') cmdPressed = false;
+        if (event.code === 'ShiftRight' || event.code === 'ShiftLeft') shiftPressed = false;
     });
 
     document.addEventListener('keydown', (event) => {
@@ -162,7 +165,13 @@ function initKeysListener() {
         } else if (event.code === 'Enter' && highlight < visibleRepos.length) {
             const mode = linkMode || DEFAULT_MODE;
             const suffix = getSuffix(mode);
-            chrome.tabs.create({url: PREFIX + visibleRepos[highlight].repo.name + suffix, active: !cmdPressed});
+            const url = PREFIX + visibleRepos[highlight].repo.name + suffix;
+            if (shiftPressed) {
+                chrome.tabs.update(undefined, {url});
+                window.close();
+            } else {
+                chrome.tabs.create({url: url, active: !cmdPressed});
+            }
         }
         updateHighlight();
     });
