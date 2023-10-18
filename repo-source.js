@@ -1,5 +1,6 @@
 const REPO_SOURCE = {
     repos: [
+        { name: "analytical-data-operator" },
         { name: "custom-jena-fuseki" },
         { name: "custom-jupyter-labs" },
         { name: "custom-maven-with-node-builder" },
