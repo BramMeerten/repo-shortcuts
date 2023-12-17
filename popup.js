@@ -1,7 +1,8 @@
 const LINK_MODES = {
-    PULL_REQUEST: { hotKey: 'p', label: 'pr' },
+    PULL_REQUEST: {},
+    COMMITS: { hotKey: 'c', label: 'com' },
     SOURCE: { hotKey: 's', label: 'src' },
-    CREATE_PULL_REQUEST: { hotKey: 'c', label: 'c-pr' },
+    CREATE_PULL_REQUEST: { hotKey: 'p', label: 'c-pr' },
 }
 const DEFAULT_MODE = LINK_MODES.PULL_REQUEST;
 const PREFIX = 'https://bitbucket.org/cjsm/';
@@ -193,12 +194,14 @@ function initKeysListener() {
 }
 
 function getSuffix(mode) {
-    switch (mode.hotKey) {
-        case LINK_MODES.PULL_REQUEST.hotKey:
+    switch (mode) {
+        case LINK_MODES.PULL_REQUEST:
             return '/pull-requests/';
-        case LINK_MODES.SOURCE.hotKey:
+        case LINK_MODES.COMMITS:
+            return '/commits/';
+        case LINK_MODES.SOURCE:
             return '/src/';
-        case LINK_MODES.CREATE_PULL_REQUEST.hotKey:
+        case LINK_MODES.CREATE_PULL_REQUEST:
             return '/pull-requests/new';
         default:
             return ''
