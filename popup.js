@@ -187,6 +187,7 @@ function initKeysListener() {
                 window.close();
             } else {
                 chrome.tabs.create({url: url, active: !cmdPressed});
+                window.close();
             }
         }
         updateHighlight();
