@@ -58,7 +58,22 @@ function updateHighlight() {
     }
 
     rows.item(highlight).classList.add('highlighted');
-    rows.item(highlight).scrollIntoViewIfNeeded();
+    scrollIntoViewAndWait(rows.item(highlight)).then(() => {
+        // Needed because input at top is focused,
+        // otherwise it will always first jump up to the input, and then down to highlight
+        rows.item(highlight).scrollIntoView({ block: 'center', inline: 'center' });
+    });
+}
+
+function scrollIntoViewAndWait(element) {
+    return new Promise(resolve => {
+        if ('onscrollend' in window) {
+            document.addEventListener('scrollend', resolve, { once: true });
+            element.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+        } else {
+            resolve()
+        }
+    });
 }
 
 function flattenRepos(repos, dir = [], result = []) {
