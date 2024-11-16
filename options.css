@@ -29,7 +29,7 @@ body, html {
   display: none;
 }
 
-.error {
+.error-message {
   padding: 0.5rem;
   color: red;
   font-weight: bold;

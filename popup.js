@@ -47,7 +47,8 @@ async function loadRepos() {
       .map(repo => ({...repo, name: getRepoName(repo)}))
       .map(repo => {
         return {...repo, url: repo.url.endsWith("/") ? repo.url.substring(0, repo.url.length-2) : repo.url };
-      });
+      })
+      .sort(compareRepos);
 }
 
 function getRepoName(repo) {
@@ -131,14 +132,12 @@ function scrollIntoViewAndWait(element) {
     });
 }
 
-function sortRepos(repos) {
-    return repos.sort((r1, r2) => {
-        const tag1 = r1.tag || '';
-        const tag2 = r2.tag || '';
-        const tagResult = tag1 > tag2 ? 1 : (tag1 === tag2 ? 0 : -1);
-        const nameResult = r1.name > r2.name ? 1 : -1;
-        return tagResult === 0 ? nameResult : tagResult;
-    });
+function compareRepos(r1, r2) {
+    const tag1 = r1.tag || '';
+    const tag2 = r2.tag || '';
+    const tagResult = tag1 > tag2 ? 1 : (tag1 === tag2 ? 0 : -1);
+    const nameResult = r1.name > r2.name ? 1 : -1;
+    return tagResult === 0 ? nameResult : tagResult;
 }
 
 function createTagBadge(tag) {

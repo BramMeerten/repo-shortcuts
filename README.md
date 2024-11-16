@@ -1,11 +1,13 @@
 # Repo Shortcuts
+<img src="./preview.gif" width="500" />
+
 This Firefox extension allows you to quickly navigate to your Git repositories.  
-Save your repositories via the settings menu (`⌘B` > **Settings**) and access them using hotkeys.
+Save your repositories via the settings menu (`⌘ + .` or `Ctrl + .` > **Settings**) and access them using hotkeys.
 
 Currently only works for repositories hosted on `github.com` and `bitbucket.org`.
 
 ### Hotkeys
-- **`⌘B`**: Open the repository list popup. Start typing to search.  
+- **`⌘ + .` or `Ctrl + .`**: Open the repository list popup. Start typing to search.  
 - **`↑`, `↓`**: Navigate through the list.  
 - **`Enter`**: Open the selected repository in a new tab.  
 - **`⌘Enter`**: Open the selected repository in a new tab, but keep the current tab active.  
@@ -25,11 +27,11 @@ Unfortunately, regular Firefox [does not allow permanently installing local exte
 
 To avoid having to reinstall the extension repeatedly after restarting my browser, I decided to sign and publish it. I updated the extension to make it usable for others by replacing the hardcoded list of repositories with a customizable list and a settings menu.
 
-## Why does this exist?
-This extension was created for personal use to quickly navigate between a large list of repo's and easily create pull requests using the keyboard.
-Unfortunately regular Firefox [does not allow you to permanently install local extensions](https://stackoverflow.com/questions/47363481/install-a-personal-firefox-web-extension-permanently) without signing the extension.
-
-So I decided to sign and publish the extension so I don't need to constantly reinstall it when I restart my browser. I updated the extension to make it usable for others (remove harcoded list of repo's and introduce a settings menu).
+## Installation
+### Install locally
+* Clone this repo
+* In Firefox navigate to `about:debugging` > This Firefox > Load Temporary Add-on
+* Select `manifest.json` from the cloned repo
 
 ## Todo's
 * Import/export settings
@@ -39,9 +41,7 @@ So I decided to sign and publish the extension so I don't need to constantly rei
 * Delete repo button in settings
 * Test as chrome extension
 * Test non-mac shortcuts
-* Update manifest
 * Register extension with Firefox
-* Add gif to README
 * Make hotkeys configurable
 * Typescript?
 * lint or .editorconfig or ...: Fix mixed indentation and mixed single/double quotes
