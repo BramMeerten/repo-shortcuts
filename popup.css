@@ -7,7 +7,7 @@ html, body {
 }
 
 #search-container {
-    width: 300px;
+    min-width: 300px;
     margin: 3px;
     padding: 2px;
     display: flex;
@@ -18,6 +18,15 @@ html, body {
     flex-grow: 1;
     border: none;
     outline: none;
+}
+
+#search-container #settings {
+    background: url('settings.svg') bottom center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
 }
 
 #repos-container {

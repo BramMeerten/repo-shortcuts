@@ -5,19 +5,44 @@ const LINK_MODES = {
     CREATE_PULL_REQUEST: { hotKey: 'p', label: 'c-pr' },
 }
 const DEFAULT_MODE = LINK_MODES.PULL_REQUEST;
-const PREFIX = 'https://bitbucket.org/cjsm/';
-const REPOS = sortFlattenedRepos(flattenRepos(REPO_SOURCE));
 
 document.addEventListener("DOMContentLoaded", (event) => {
-    visibleRepos = REPOS;
-    updateVisibleRepos();
-    initSearch();
-    initKeysListener();
+  loadSettings().then(settings => {
+      allRepos = settings;
+      visibleRepos = settings;
+      updateVisibleRepos();
+      initSearch();
+      initKeysListener();
+      initSettings();
+    }); // TODO error handling
 });
 
 let linkMode = undefined;
 let highlight = 0;
+let allRepos = [];
 let visibleRepos = [];
+
+async function loadSettings() {
+    // await saveReposInStorage(REPO_SOURCE.repos); // Resets settings
+    let repos = (await loadReposFromStorage()) // TODO error handling
+      .map(repo => ({...repo, host: findHostSettingsByUrl(repo.url)?.host}))
+      .map(repo => ({...repo, name: getRepoName(repo)}))
+      .map(repo => {
+        return {...repo, url: repo.url.endsWith("/") ? repo.url.substring(0, repo.url.length-2) : repo.url };
+      });
+
+    return repos;
+}
+
+function getRepoName(repo) {
+    const hostSettings = findHostSettingsByHostname(repo.host);
+    if (!hostSettings) {
+      console.log('this should not have happened...');
+      return undefined;
+    }
+
+    return extractRepoNameFromUrl(hostSettings, repo.url); 
+}
 
 function initSearch() {
     const input = document.getElementById('search-container').getElementsByTagName('input')[0];
@@ -25,19 +50,22 @@ function initSearch() {
     input.addEventListener("keydown", (event) => handleSearchKeyDown(event));
 }
 
+function initSettings() {
+    document.getElementById('settings').addEventListener('click', () => {
+        browser.runtime.openOptionsPage()
+    });
+}
+
 function updateVisibleRepos() {
     const container = document.getElementById("repos-container");
     while (container.firstChild)
         container.removeChild(container.lastChild);
     visibleRepos.forEach(repo => {
-        const dirElements = repo.dir.map(dir => createDirBadge(dir));
-        const nameElem = createRepoNameElement(repo);
-
-        const div= document.createElement("div");
+        const div = document.createElement("div");
         div.className = 'repo-row';
 
-        dirElements.forEach(e => div.appendChild(e));
-        div.appendChild(nameElem);
+        repo.tag && div.appendChild(createTagBadge(repo.tag));
+        div.appendChild(createRepoNameElement(repo));
         container.appendChild(div);
     });
 
@@ -77,39 +105,26 @@ function scrollIntoViewAndWait(element) {
     });
 }
 
-function flattenRepos(repos, dir = [], result = []) {
-    const curDir = [...dir];
-    if (repos.name) curDir.push(repos.name);
-
-    repos.repos.forEach(repo => {
-        result.push({ repo, dir: curDir });
-    });
-
-    (repos.subDirs || []).forEach(subDir => result = flattenRepos(subDir, curDir, result));
-
-    return result;
-}
-
-function sortFlattenedRepos(repos) {
+function sortRepos(repos) {
     return repos.sort((r1, r2) => {
-        const dirs1 = r1.dir.join(' ');
-        const dirs2 = r2.dir.join(' ');
-        const dirResult = dirs1 > dirs2 ? 1 : (dirs1 === dirs2 ? 0 : -1);
-        const nameResult = r1.repo.name > r2.repo.name ? 1 : -1;
-        return dirResult === 0 ? nameResult : dirResult;
+        const tag1 = r1.tag || '';
+        const tag2 = r2.tag || '';
+        const tagResult = tag1 > tag2 ? 1 : (tag1 === tag2 ? 0 : -1);
+        const nameResult = r1.name > r2.name ? 1 : -1;
+        return tagResult === 0 ? nameResult : tagResult;
     });
 }
 
-function createDirBadge(dir) {
+function createTagBadge(tag) {
     const span = document.createElement('span')
     span.className = 'dir-badge';
-    span.innerText = dir;
+    span.innerText = tag;
     return span;
 }
 
 function createRepoNameElement(repo) {
     const nameElem = document.createElement('span');
-    nameElem.innerText = repo.repo.name;
+    nameElem.innerText = repo.name;
     return nameElem;
 }
 
@@ -143,13 +158,13 @@ function updateLinkModeElement() {
 
 function updateDisplayedRepos(search) {
     const searchWords = search.split(' ');
-    visibleRepos = REPOS.filter(repo => {
+    visibleRepos = allRepos.filter(repo => {
         return searchWords
             .map(w => w.toLowerCase())
             .every(word => {
-                const matchesName = repo.repo.name.toLowerCase().includes(word);
-                const matchesDir = repo.dir.some(dir => dir.toLowerCase().includes(word));
-                return matchesName || matchesDir;
+                const matchesName = repo.name.toLowerCase().includes(word);
+                const matchesTag = repo.tag && repo.tag.includes(word);
+                return matchesName || matchesTag;
             });
     });
 
@@ -181,7 +196,8 @@ function initKeysListener() {
         } else if (event.code === 'Enter' && highlight < visibleRepos.length) {
             const mode = linkMode || DEFAULT_MODE;
             const suffix = getSuffix(mode);
-            const url = PREFIX + visibleRepos[highlight].repo.name + suffix;
+            let url = visibleRepos[highlight].url + suffix;
+            url = (/^https?:\/\/.+/).test(url) ? url : 'https://' + url;
             if (shiftPressed) {
                 chrome.tabs.update(undefined, {url});
                 window.close();

@@ -3,9 +3,13 @@
   "name": "Repo Shortcuts",
   "description": "Shortcuts to repo pages",
   "version": "1.0",
+  "permissions": ["storage"],
   "action": {
-    "default_popup": "hello.html",
-    "default_icon": "hello_extensions.png"
+    "default_popup": "popup.html",
+    "default_icon": "icon.png"
+  },
+  "options_ui": {
+    "page": "options.html"
   },
   "commands": {
     "_execute_action": {
