@@ -2,6 +2,8 @@
 This Firefox extension allows you to quickly navigate to your Git repositories.  
 Save your repositories via the settings menu (`⌘B` > **Settings**) and access them using hotkeys.
 
+Currently only works for repositories hosted on `github.com` and `bitbucket.org`.
+
 ### Hotkeys
 - **`⌘B`**: Open the repository list popup. Start typing to search.  
 - **`↑`, `↓`**: Navigate through the list.  
@@ -33,12 +35,10 @@ So I decided to sign and publish the extension so I don't need to constantly rei
 * Import/export settings
 * Error messages
 * Add custom git hosts
-* Add other default git hosts (github, ...)
 * When saving don't remove invalid repo's, keep previous valid version
 * Delete repo button in settings
 * Test as chrome extension
 * Test non-mac shortcuts
-* Default repo
 * Update manifest
 * Register extension with Firefox
 * Add gif to README

@@ -5,6 +5,7 @@ const LINK_MODES = {
     CREATE_PULL_REQUEST: { hotKey: 'p', label: 'c-pr' },
 }
 const DEFAULT_MODE = LINK_MODES.PULL_REQUEST;
+const DEFAULT_REPOS = [{ url: 'https://github.com/BramMeerten/repo-shortcuts', tag: 'example' }];
 
 let linkMode = undefined;
 let highlight = 0;
@@ -29,9 +30,19 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 async function loadRepos() {
-    // TODO temp use to reset settings
-    // await saveReposInStorage(REPO_SOURCE.repos);
-    return (await loadReposFromStorage())
+    let repos = await loadReposFromStorage();
+
+    if (repos.length === 0) {
+      try {
+        repos = DEFAULT_REPOS;
+        await saveReposInStorage(repos);
+      } catch (error) {
+        console.error("Failed to save default repo.");
+        repos = [];
+      }
+    }
+
+    return repos
       .map(repo => ({...repo, host: findHostSettingsByUrl(repo.url)?.host}))
       .map(repo => ({...repo, name: getRepoName(repo)}))
       .map(repo => {
@@ -211,8 +222,9 @@ function initKeysListener() {
                 highlight = 0;
         } else if (event.code === 'Enter' && highlight < visibleRepos.length) {
             const mode = linkMode || DEFAULT_MODE;
-            const suffix = getSuffix(mode);
-            let url = visibleRepos[highlight].url + suffix;
+            const repo = visibleRepos[highlight];
+            const suffix = getSuffix(repo, mode);
+            let url = repo.url + suffix;
             url = (/^https?:\/\/.+/).test(url) ? url : 'https://' + url;
             if (shiftPressed) {
                 chrome.tabs.update(undefined, {url});
@@ -226,16 +238,21 @@ function initKeysListener() {
     });
 }
 
-function getSuffix(mode) {
+function getSuffix(repo, mode) {
+    const settings = findHostSettingsByHostname(repo.host);
+    if (!settings) {
+        return '';
+    }
+
     switch (mode) {
         case LINK_MODES.PULL_REQUEST:
-            return '/pull-requests/';
+            return settings['PULL_REQUEST'];
         case LINK_MODES.COMMITS:
-            return '/commits/';
+            return settings['COMMITS'];
         case LINK_MODES.SOURCE:
-            return '/src/';
+            return settings['SOURCE'];
         case LINK_MODES.CREATE_PULL_REQUEST:
-            return '/pull-requests/new';
+            return settings['CREATE_PULL_REQUEST'];
         default:
             return ''
     }

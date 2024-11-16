@@ -6,6 +6,14 @@ const HOSTS = [
     COMMITS: "/commits/",
     SOURCE: "/src/",
     CREATE_PULL_REQUEST: "/pull-requests/new"
+  },
+  {
+    host: "github.com",
+    nameRegex: /^(?:https?:\/\/)?(?:www.)?github.com\/.+\/(.+)\/?$/,
+    PULL_REQUEST: "/pulls",
+    COMMITS: "/commits",
+    SOURCE: "/",
+    CREATE_PULL_REQUEST: "/compare"
   }
 ];
 
