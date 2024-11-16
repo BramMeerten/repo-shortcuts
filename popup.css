@@ -49,3 +49,9 @@ html, body {
 .highlighted {
     background-color: #f1f1f1;
 }
+
+.error {
+  padding: 0.5rem;
+  color: red;
+  font-weight: bold;
+}

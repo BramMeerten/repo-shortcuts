@@ -1,23 +1,25 @@
-document.addEventListener("DOMContentLoaded", (event) => {
-  loadSettings().then(() => {});
-});
+const REPO_CONTAINER_ID = "repo-list";
 
 let repos = [];
 
+document.addEventListener("DOMContentLoaded", () => {
+  loadSettings().then(() => {});
+});
+
 async function loadSettings() {
   repos = await loadReposFromStorage();
-  const container = document.getElementById("repo-list");
+  const container = document.getElementById(REPO_CONTAINER_ID);
   [...repos, { url: ""}]
-    .map(createRepoInputElement)
+    .map(createRepoRowElement)
     .forEach(elem => container.appendChild(elem));
 }
 
-function createRepoInputElement(repo) {
+function createRepoRowElement(repo) {
   const div = document.createElement("div");
   const input = document.createElement("input");
   input.value = repo.url;
   input.placeholder = "Repo URL";
-  input.addEventListener('keyup', event => {
+  input.addEventListener('keyup', () => {
     addOrRemoveLastInputElements();
     updateSettings();
   });
@@ -26,7 +28,7 @@ function createRepoInputElement(repo) {
   const tagInput = document.createElement("input");
   tagInput.value = repo.tag || null;
   tagInput.placeholder = "Tag";
-  tagInput.addEventListener('keyup', event => {
+  tagInput.addEventListener('keyup', () => {
      addOrRemoveLastInputElements();
      updateSettings();
   });
@@ -36,11 +38,11 @@ function createRepoInputElement(repo) {
 }
 
 function addOrRemoveLastInputElements() {
-  const container = document.getElementById("repo-list"); // TODO hardcoded repo-list
+  const container = document.getElementById(REPO_CONTAINER_ID);
   const children = container.getElementsByTagName("input");
 
   if (children.length >= 2 && (children[children.length - 2].value?.trim() || children[children.length - 1].value?.trim())) {
-    container.appendChild(createRepoInputElement({url: ""}));
+    container.appendChild(createRepoRowElement({url: ""}));
   
   } else if (children.length >= 4 && (!children[children.length - 4].value?.trim() && !children[children.length - 3].value?.trim())) {
     container.removeChild(children[children.length - 1].parentElement);
@@ -48,7 +50,7 @@ function addOrRemoveLastInputElements() {
 }
 
 async function updateSettings() {
-  const container = document.getElementById("repo-list"); // TODO hardcoded repo-list
+  const container = document.getElementById(REPO_CONTAINER_ID);
   const children = [...container.getElementsByTagName("input")];
   const repos = [];
 
@@ -57,22 +59,39 @@ async function updateSettings() {
     const tag = children[i+1].value?.trim();
 
     let error = false;
-    if (i !== children.length-2) {
-      if (!url) {
+    if (!url) {
         error = true;
-      } else {
+    } else {
         const hostSettings = findHostSettingsByUrl(url);
         error = !hostSettings || !extractRepoNameFromUrl(hostSettings, url);
-      }
     }
 
+    const isLastRow = i === children.length-2;
     if (!error) {
       children[i].classList.remove("error");
       repos.push({url, tag: tag || undefined});
-    } else {
-      children[i].classList.add("error"); // TODO error message
+
+    } else if (!isLastRow) {
+      children[i].classList.add("error");
     }
   }
 
-  await saveReposInStorage(repos); // TODO error handling
+  try {
+    await saveReposInStorage(repos);
+    setError(undefined);
+
+  } catch(error) {
+    console.error("Unexpected error saving repositories:", error);
+    setError("Unexpected error. Failed to save settings.");
+  }
+}
+
+function setError(error) {
+  const errorDiv = document.getElementById("repo-list-error");
+  if (!error) {
+    errorDiv.style.display = "none";
+  } else {
+    errorDiv.innerText = error;
+    errorDiv.style.display = "block";
+  }
 }

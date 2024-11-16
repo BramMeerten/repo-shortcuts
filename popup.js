@@ -6,38 +6,43 @@ const LINK_MODES = {
 }
 const DEFAULT_MODE = LINK_MODES.PULL_REQUEST;
 
-document.addEventListener("DOMContentLoaded", (event) => {
-  loadSettings().then(settings => {
-      allRepos = settings;
-      visibleRepos = settings;
-      updateVisibleRepos();
-      initSearch();
-      initKeysListener();
-      initSettings();
-    }); // TODO error handling
-});
-
 let linkMode = undefined;
 let highlight = 0;
 let allRepos = [];
 let visibleRepos = [];
 
-async function loadSettings() {
-    // await saveReposInStorage(REPO_SOURCE.repos); // Resets settings
-    let repos = (await loadReposFromStorage()) // TODO error handling
+document.addEventListener("DOMContentLoaded", () => {
+  loadRepos().then(repos => {
+      allRepos = repos;
+
+    }).catch(error => {
+      console.error("Failed to load repo's:", error);
+      allRepos = undefined;
+
+    }).finally(() => {
+      visibleRepos = allRepos;
+      updateVisibleRepos();
+      initSearch();
+      initKeysListener();
+      initSettings();
+    });
+});
+
+async function loadRepos() {
+    // TODO temp use to reset settings
+    // await saveReposInStorage(REPO_SOURCE.repos);
+    return (await loadReposFromStorage())
       .map(repo => ({...repo, host: findHostSettingsByUrl(repo.url)?.host}))
       .map(repo => ({...repo, name: getRepoName(repo)}))
       .map(repo => {
         return {...repo, url: repo.url.endsWith("/") ? repo.url.substring(0, repo.url.length-2) : repo.url };
       });
-
-    return repos;
 }
 
 function getRepoName(repo) {
     const hostSettings = findHostSettingsByHostname(repo.host);
     if (!hostSettings) {
-      console.log('this should not have happened...');
+      console.error('Unexpected error. Could not find host settings for repo', repo.url);
       return undefined;
     }
 
@@ -60,6 +65,16 @@ function updateVisibleRepos() {
     const container = document.getElementById("repos-container");
     while (container.firstChild)
         container.removeChild(container.lastChild);
+
+    if (allRepos === undefined) {
+      const div = document.createElement("div");
+      div.className = 'error';
+      div.textContent = 'Unexpected error: Failed to load repositories';
+
+      container.appendChild(div);
+      return;
+    }
+
     visibleRepos.forEach(repo => {
         const div = document.createElement("div");
         div.className = 'repo-row';
@@ -174,6 +189,7 @@ function updateDisplayedRepos(search) {
 function initKeysListener() {
     let cmdPressed = false;
     let shiftPressed = false;
+
     document.addEventListener('keydown', (event) => {
         if (event.code === 'MetaLeft') cmdPressed = true;
         if (event.code === 'ShiftRight' || event.code === 'ShiftLeft') shiftPressed = true;

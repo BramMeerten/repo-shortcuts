@@ -24,3 +24,13 @@ body, html {
 #repo-list input.error {
   border-color: red;
 }
+
+#repo-list-error {
+  display: none;
+}
+
+.error {
+  padding: 0.5rem;
+  color: red;
+  font-weight: bold;
+}

@@ -5,7 +5,9 @@ Save your repositories via the settings menu (`⌘B` > **Settings**) and access 
 ### Hotkeys
 - **`⌘B`**: Open the repository list popup. Start typing to search.  
 - **`↑`, `↓`**: Navigate through the list.  
-- **`Enter`**: Open the selected repository.  
+- **`Enter`**: Open the selected repository in a new tab.  
+- **`⌘Enter`**: Open the selected repository in a new tab, but keep the current tab active.  
+- **`Shift+Enter`**: Open the selected repository in the current tab.  
 
 ### Special Modes
 To open a repository in a specific mode, type one of the following characters followed by a space (`<space>`), type your search text, then hit `<Enter>`:  
@@ -41,3 +43,5 @@ So I decided to sign and publish the extension so I don't need to constantly rei
 * Register extension with Firefox
 * Add gif to README
 * Make hotkeys configurable
+* Typescript?
+* lint or .editorconfig or ...: Fix mixed indentation and mixed single/double quotes
