@@ -2,8 +2,11 @@
   "manifest_version": 3,
   "name": "Repo Shortcuts",
   "description": "Shortcuts to git repositories",
-  "version": "1.0",
+  "version": "1.1",
   "permissions": ["storage"],
+  "icons": {
+    "42": "icon.png"
+  },
   "browser_specific_settings": {
     "gecko": {
       "id": "repo-shortcuts.BramMeerten@github.com"
