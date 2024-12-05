@@ -44,4 +44,3 @@ Install via [Firefox add-ons](https://addons.mozilla.org/en-US/firefox/addon/rep
 * Test non-mac shortcuts
 * Make hotkeys configurable
 * Typescript?
-* lint or .editorconfig or ...: Fix mixed indentation and mixed single/double quotes

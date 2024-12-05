@@ -32,8 +32,8 @@ function createRepoRowElement(repo) {
   tagInput.value = repo.tag || null;
   tagInput.placeholder = "Tag";
   tagInput.addEventListener('keyup', () => {
-     addOrRemoveLastInputElements();
-     updateSettings();
+    addOrRemoveLastInputElements();
+    updateSettings();
   });
   div.appendChild(tagInput);
 

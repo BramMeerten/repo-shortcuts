@@ -13,7 +13,7 @@ if [ "$settingsVersion" == "$manifestVersion" ]; then
     echo -n "Do you want to continue? (y/n): "
     read -r RESPONSE
     if [[ ! "$RESPONSE" =~ ^[Yy]$ ]]; then
-      exit 0
+        exit 0
     fi
 fi
 
