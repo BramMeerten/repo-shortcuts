@@ -30,7 +30,7 @@ To avoid having to reinstall the extension repeatedly after restarting my browse
 ## Installation
 Install via [Firefox add-ons](https://addons.mozilla.org/en-US/firefox/addon/repo-shortcuts/).
 
-### Install locally
+#### Or install locally
 * Clone this repo
 * In Firefox navigate to `about:debugging` > This Firefox > Load Temporary Add-on
 * Select `manifest.json` from the cloned repo
@@ -43,7 +43,8 @@ Install via [Firefox add-ons](https://addons.mozilla.org/en-US/firefox/addon/rep
 * Delete repo button in settings
 * Test as chrome extension
 * Test non-mac shortcuts
-* Register extension with Firefox
 * Make hotkeys configurable
 * Typescript?
 * lint or .editorconfig or ...: Fix mixed indentation and mixed single/double quotes
+* Improve quality of preview gif
+* Don't use markdown in [description of add-on](https://addons.mozilla.org/en-US/firefox/addon/repo-shortcuts/).
