@@ -56,23 +56,57 @@ async function getSettings() {
   return await getSettingsWithLatestVersion(null);
 }
 
+async function saveSettings(settings) {
+  const newSettings = convertSettings(settings);
+  validateSettings(newSettings);
+  await browser.storage.local.set(newSettings);
+}
+
 async function getSettingsWithLatestVersion(itemKey) {
   let settings = await browser.storage.local.get(itemKey === null ? null : ["version", itemKey]);
   if (settings?.version === VERSION) {
     return settings;
   }
 
-  settings = (await browser.storage.local.get(null) || {})
+  settings = convertSettings(await browser.storage.local.get(null) || {});
+  console.log('Updating old settings to version', settings.version);
+  await browser.storage.local.set(settings);
+
+  return getSettingsWithLatestVersion(itemKey);
+}
+
+function convertSettings(oldSettings) {
+  let settings = {...oldSettings};
 
   // Convert version 1.0 to 1.1
   if (settings.version === undefined) {
     settings = {...settings, version: "1.1"};
   }
 
-  // Set to latest version and save
-  console.log('Updating old settings to version', VERSION);
   settings.version = VERSION;
-  await browser.storage.local.set(settings);
+  return settings;
+}
 
-  return getSettingsWithLatestVersion(itemKey);
+function validateSettings(settings) {
+  const isString = val => typeof val === 'string' || val instanceof String;
+
+  if (settings.version !== VERSION) {
+    throw Error("Invalid settings, expected version " + VERSION + ", but is " + (repo.settings || "missing"));
+  }
+
+  if (settings.repos) {
+    if (!Array.isArray(settings.repos)) {
+      throw Error("Invalid settings, property 'repo' should be an array of repos.");
+    }
+
+    for (let repo of settings.repos) {
+      console.log('check', repo.url);
+      if (!repo.url || !isString(repo.url)) {
+        throw Error("Every repo should have a 'url' field of type String.");
+      } 
+      if (repo.tag && !isString(repo.tag)) {
+        throw Error("Field 'tag' of repo should be of type String.");
+      }
+    }
+  }
 }

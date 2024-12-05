@@ -10,6 +10,8 @@ document.addEventListener("DOMContentLoaded", () => {
 async function loadSettings() {
   repos = await loadReposFromStorage();
   const container = document.getElementById(REPO_CONTAINER_ID);
+  container.textContent = '';
+
   [...repos, { url: ""}]
     .map(createRepoRowElement)
     .forEach(elem => container.appendChild(elem));
@@ -88,7 +90,15 @@ async function updateSettings() {
 }
 
 function setError(error) {
-  const errorDiv = document.getElementById("repo-list-error");
+  setErrorForElementWithId(error, "repo-list-error");
+}
+
+function setImportError(error) {
+  setErrorForElementWithId(error, "import-error");
+}
+
+function setErrorForElementWithId(error, id) {
+  const errorDiv = document.getElementById(id);
   if (!error) {
     errorDiv.style.display = "none";
   } else {
@@ -126,5 +136,30 @@ async function exportSettings() {
 }
 
 async function importSettings() {
+  const input = document.createElement("input");
 
+  input.setAttribute("type", "file");
+  input.setAttribute("accept", ".json");
+
+  input.addEventListener("change", e => {
+    var files = e.target.files;
+    const reader = new FileReader();
+    reader.addEventListener( "load", () => {
+      saveSettings(JSON.parse(reader.result))
+        .then(() => loadSettings())
+        .then(() => setImportError(null))
+        .catch(error => {
+          setImportError("Failed to parse settings.");
+          console.error("Failed to parse settings.", error);
+        });
+    });
+
+    if (files && files.length === 1) {
+      reader.readAsText(files[0]);
+    }
+  });
+
+  document.body.appendChild(input);
+  input.click();
+  document.body.removeChild(input);
 }
