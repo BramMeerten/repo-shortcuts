@@ -51,7 +51,7 @@ html, body {
 }
 
 .error {
-  padding: 0.5rem;
-  color: red;
-  font-weight: bold;
+    padding: 0.5rem;
+    color: red;
+    font-weight: bold;
 }
