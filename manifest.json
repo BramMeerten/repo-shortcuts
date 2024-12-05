@@ -4,6 +4,11 @@
   "description": "Shortcuts to git repositories",
   "version": "1.0",
   "permissions": ["storage"],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "repo-shortcuts.BramMeerten@github.com"
+    }
+  },
   "action": {
     "default_popup": "popup.html",
     "default_icon": "icon.png"

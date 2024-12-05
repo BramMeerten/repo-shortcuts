@@ -28,6 +28,8 @@ Unfortunately, regular Firefox [does not allow permanently installing local exte
 To avoid having to reinstall the extension repeatedly after restarting my browser, I decided to sign and publish it. I updated the extension to make it usable for others by replacing the hardcoded list of repositories with a customizable list and a settings menu.
 
 ## Installation
+Install via [Firefox add-ons](https://addons.mozilla.org/en-US/firefox/addon/repo-shortcuts/).
+
 ### Install locally
 * Clone this repo
 * In Firefox navigate to `about:debugging` > This Firefox > Load Temporary Add-on
