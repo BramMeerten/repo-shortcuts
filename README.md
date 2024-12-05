@@ -45,6 +45,3 @@ Install via [Firefox add-ons](https://addons.mozilla.org/en-US/firefox/addon/rep
 * Make hotkeys configurable
 * Typescript?
 * lint or .editorconfig or ...: Fix mixed indentation and mixed single/double quotes
-* Improve quality of preview gif
-* Don't use markdown in [description of add-on](https://addons.mozilla.org/en-US/firefox/addon/repo-shortcuts/).
-* Missing firefox extension icon
