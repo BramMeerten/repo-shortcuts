@@ -36,7 +36,6 @@ Install via [Firefox add-ons](https://addons.mozilla.org/en-US/firefox/addon/rep
 * Select `manifest.json` from the cloned repo
 
 ## Todo's
-* Import/export settings
 * Error messages
 * Add custom git hosts
 * When saving don't remove invalid repo's, keep previous valid version
@@ -48,3 +47,4 @@ Install via [Firefox add-ons](https://addons.mozilla.org/en-US/firefox/addon/rep
 * lint or .editorconfig or ...: Fix mixed indentation and mixed single/double quotes
 * Improve quality of preview gif
 * Don't use markdown in [description of add-on](https://addons.mozilla.org/en-US/firefox/addon/repo-shortcuts/).
+* Missing firefox extension icon

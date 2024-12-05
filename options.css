@@ -1,6 +1,10 @@
 body, html {
 }
 
+.header {
+  padding-bottom: 5px;
+}
+
 .section {
   border-bottom: 1px solid gray;
 }

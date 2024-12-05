@@ -4,6 +4,7 @@ let repos = [];
 
 document.addEventListener("DOMContentLoaded", () => {
   loadSettings().then(() => {});
+  addImportAndExportSettingsEventListeners();
 });
 
 async function loadSettings() {
@@ -94,4 +95,36 @@ function setError(error) {
     errorDiv.innerText = error;
     errorDiv.style.display = "block";
   }
+}
+
+function addImportAndExportSettingsEventListeners() {
+  const exportButton = document.getElementById("export-settings");
+  exportButton.addEventListener('click', e => {
+    e.preventDefault();
+    exportSettings().then(() => {});
+  });
+
+
+  const importButton = document.getElementById("import-settings");
+  importButton.addEventListener('click', e => {
+    e.preventDefault();
+    importSettings().then(() => {});
+  });
+}
+
+async function exportSettings() {
+  const settings = await getSettings();
+
+  const element = document.createElement("a");
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(settings)));
+  element.setAttribute('download', 'repo-shortcuts-settings.json');
+
+  element.style.display = 'none';
+  document.body.appendChild(element);
+  element.click();
+  document.body.removeChild(element);
+}
+
+async function importSettings() {
+
 }
