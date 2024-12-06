@@ -1,4 +1,4 @@
-const VERSION = "1.1";
+const VERSION = "1.2";
 const HOSTS = [
   {
     host: "bitbucket.org",

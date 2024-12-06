@@ -12,13 +12,20 @@ async function loadSettings() {
   const container = document.getElementById(REPO_CONTAINER_ID);
   container.textContent = '';
 
-  [...repos, { url: ""}]
-    .map(createRepoRowElement)
+  repos
+    .map(repo => createRepoRowElement(repo))
     .forEach(elem => container.appendChild(elem));
+  container.appendChild(createRepoRowElement({url: ""}, false));
 }
 
-function createRepoRowElement(repo) {
+function createRepoRowElement(repo, includeRemoveButton = true) {
   const div = document.createElement("div");
+  div.classList.add("repo");
+
+  const tooltip = document.createElement("span");
+  tooltip.classList.add("tooltiptext");
+  div.appendChild(tooltip);
+
   const input = document.createElement("input");
   input.value = repo.url;
   input.placeholder = "Repo URL";
@@ -37,6 +44,12 @@ function createRepoRowElement(repo) {
   });
   div.appendChild(tagInput);
 
+  const deleteButton = document.createElement("div");
+  deleteButton.classList.add("delete");
+  deleteButton.style.display = includeRemoveButton ? "inline-block" : "none";
+  deleteButton.addEventListener('click', () => removeRepo(div));
+  div.appendChild(deleteButton);
+
   return div;
 }
 
@@ -45,9 +58,13 @@ function addOrRemoveLastInputElements() {
   const children = container.getElementsByTagName("input");
 
   if (children.length >= 2 && (children[children.length - 2].value?.trim() || children[children.length - 1].value?.trim())) {
-    container.appendChild(createRepoRowElement({url: ""}));
+    const deleteButton = children[children.length - 1].parentElement.querySelector('.delete');
+    deleteButton.style.display = 'inline-block';
+    container.appendChild(createRepoRowElement({url: ""}, false));
   
   } else if (children.length >= 4 && (!children[children.length - 4].value?.trim() && !children[children.length - 3].value?.trim())) {
+    const deleteButton = children[children.length - 3].parentElement.querySelector('.delete');
+    deleteButton.style.display = 'none';
     container.removeChild(children[children.length - 1].parentElement);
   }
 }
@@ -61,21 +78,26 @@ async function updateSettings() {
     const url = children[i].value?.trim();
     const tag = children[i+1].value?.trim();
 
-    let error = false;
+    let errorMessage = undefined;
     if (!url) {
-        error = true;
+      errorMessage = "Url is required";
     } else {
-        const hostSettings = findHostSettingsByUrl(url);
-        error = !hostSettings || !extractRepoNameFromUrl(hostSettings, url);
+      const hostSettings = findHostSettingsByUrl(url);
+      if (!hostSettings) {
+        errorMessage = "Invalid url or unsupported git host";
+      } else if (!extractRepoNameFromUrl(hostSettings, url)) {
+        errorMessage = "Invalid repo url: Could not extract repo name";
+      }
     }
 
     const isLastRow = i === children.length-2;
-    if (!error) {
+    if (!errorMessage) {
       children[i].classList.remove("error");
       repos.push({url, tag: tag || undefined});
 
     } else if (!isLastRow) {
       children[i].classList.add("error");
+      children[i].parentElement.querySelector(".tooltiptext").textContent = errorMessage;
     }
   }
 
@@ -162,4 +184,10 @@ async function importSettings() {
   document.body.appendChild(input);
   input.click();
   document.body.removeChild(input);
+}
+
+function removeRepo(element) {
+  const container = document.getElementById(REPO_CONTAINER_ID);
+  container.removeChild(element);
+  updateSettings();
 }
