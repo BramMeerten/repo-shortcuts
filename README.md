@@ -39,8 +39,7 @@ Install via [Firefox add-ons](https://addons.mozilla.org/en-US/firefox/addon/rep
 * Error messages
 * Add custom git hosts
 * When saving don't remove invalid repo's, keep previous valid version
-* Delete repo button in settings
 * Test as chrome extension
 * Test non-mac shortcuts
 * Make hotkeys configurable
-* Typescript?
+* Help menu with shortcuts
