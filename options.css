@@ -17,11 +17,11 @@ body, html {
     margin: 0.1rem;
 }
 
-#repo-list input:nth-child(1) {
+#repo-list input:nth-child(2) {
     width: 50%;
 }
 
-#repo-list input:nth-child(2) {
+#repo-list input:nth-child(3) {
     width: 30%;
 }
 
@@ -41,6 +41,7 @@ body, html {
     position: relative;
     top: -2px;
 }
+
 #repo-list-error {
     display: none;
 }
@@ -51,3 +52,28 @@ body, html {
     font-weight: bold;
 }
 
+#repo-list .repo {
+    position: relative;
+}
+
+#repo-list .tooltiptext {
+    visibility: hidden;
+    width: 45%;
+    margin-left: -22.5%;
+    margin-bottom: 3px;
+
+    background-color: rgba(200, 0, 0, 0.95);
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+
+    position: absolute;
+    z-index: 1;
+    bottom: 100%;
+    left: 25%;
+}
+
+#repo-list .tooltiptext:has(+ input.error:hover), #repo-list .tooltiptext:has(+ input.error:focus) {
+    visibility: visible !important;
+}

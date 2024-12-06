@@ -20,6 +20,12 @@ async function loadSettings() {
 
 function createRepoRowElement(repo, includeRemoveButton = true) {
   const div = document.createElement("div");
+  div.classList.add("repo");
+
+  const tooltip = document.createElement("span");
+  tooltip.classList.add("tooltiptext");
+  div.appendChild(tooltip);
+
   const input = document.createElement("input");
   input.value = repo.url;
   input.placeholder = "Repo URL";
@@ -72,21 +78,26 @@ async function updateSettings() {
     const url = children[i].value?.trim();
     const tag = children[i+1].value?.trim();
 
-    let error = false;
+    let errorMessage = undefined;
     if (!url) {
-        error = true;
+      errorMessage = "Url is required";
     } else {
-        const hostSettings = findHostSettingsByUrl(url);
-        error = !hostSettings || !extractRepoNameFromUrl(hostSettings, url);
+      const hostSettings = findHostSettingsByUrl(url);
+      if (!hostSettings) {
+        errorMessage = "Invalid url or unsupported git host";
+      } else if (!extractRepoNameFromUrl(hostSettings, url)) {
+        errorMessage = "Invalid repo url: Could not extract repo name";
+      }
     }
 
     const isLastRow = i === children.length-2;
-    if (!error) {
+    if (!errorMessage) {
       children[i].classList.remove("error");
       repos.push({url, tag: tag || undefined});
 
     } else if (!isLastRow) {
       children[i].classList.add("error");
+      children[i].parentElement.querySelector(".tooltiptext").textContent = errorMessage;
     }
   }
 

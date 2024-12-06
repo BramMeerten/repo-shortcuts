@@ -36,9 +36,7 @@ Install via [Firefox add-ons](https://addons.mozilla.org/en-US/firefox/addon/rep
 * Select `manifest.json` from the cloned repo
 
 ## Todo's
-* Error messages
 * Add custom git hosts
-* When saving don't remove invalid repo's, keep previous valid version
 * Test as chrome extension
 * Test non-mac shortcuts
 * Make hotkeys configurable
