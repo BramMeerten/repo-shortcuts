@@ -41,3 +41,4 @@ Install via [Firefox add-ons](https://addons.mozilla.org/en-US/firefox/addon/rep
 * Test non-mac shortcuts
 * Make hotkeys configurable
 * Help menu with shortcuts
+* Make default mode (no prefix) configurable: Open PR's by default, open source by default, ...
